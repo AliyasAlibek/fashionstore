@@ -75,8 +75,8 @@ export default function Home() {
   // 📱 ГЛАВНАЯ
   const HomeView = () => (
     <div className="pb-24">
-      <div className="p-4">
-        <div className="mb-6">
+      <div className="p-4" style={{ paddingTop: '32px' }}>
+        <div style={{ marginBottom: '32px' }}>
           <h1 style={{ fontSize: '28px', fontWeight: 800, margin: 0, marginBottom: '8px' }}>
             👗 Fashion Store
           </h1>
@@ -332,7 +332,7 @@ export default function Home() {
     }
 
     return (
-      <div style={{ paddingBottom: '160px' }}>
+      <div style={{ paddingBottom: '180px' }}>
         <div className="p-4">
           <h2 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', margin: 0 }}>
             {t.cart}
@@ -366,21 +366,33 @@ export default function Home() {
           ))}
         </div>
 
-        {/* ИТОГО */}
-        <div style={{ position: 'fixed', bottom: '64px', left: 0, right: 0, background: 'white', borderTop: '1px solid #e5e7eb', padding: '16px', zIndex: 100 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', maxWidth: '500px', margin: '0 auto' }}>
-            <span style={{ fontSize: '16px', fontWeight: 600 }}>{t.total}:</span>
-            <span style={{ fontSize: '22px', fontWeight: 700 }}>
-              {getTotalPrice().toLocaleString()} ₸
-            </span>
+        {/* ИТОГО - ФИКСИРОВАНО ВНИЗУ */}
+        <div style={{ 
+          position: 'fixed', 
+          bottom: 0, 
+          left: 0, 
+          right: 0, 
+          background: 'white', 
+          borderTop: '1px solid #e5e7eb', 
+          padding: '16px',
+          zIndex: 100,
+          paddingBottom: 'calc(16px + env(safe-area-inset-bottom))'
+        }}>
+          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <span style={{ fontSize: '16px', fontWeight: 600 }}>{t.total}:</span>
+              <span style={{ fontSize: '22px', fontWeight: 700 }}>
+                {getTotalPrice().toLocaleString()} ₸
+              </span>
+            </div>
+            <button
+              onClick={() => setView('checkout')}
+              className="fixed-bottom-button"
+              style={{ bottom: 'auto', position: 'relative', left: 0, right: 0, marginBottom: 0 }}
+            >
+              {t.checkout}
+            </button>
           </div>
-          <button
-            onClick={() => setView('checkout')}
-            className="fixed-bottom-button"
-            style={{ bottom: '80px', position: 'relative', margin: 0 }}
-          >
-            {t.checkout}
-          </button>
         </div>
       </div>
     );
@@ -397,14 +409,47 @@ export default function Home() {
 
     const [errors, setErrors] = useState({});
 
+    // Получаем данные из Telegram при первой загрузке
+    useEffect(() => {
+      if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initDataUnsafe?.user) {
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        setForm(prev => ({
+          ...prev,
+          name: user.first_name || ''
+        }));
+      }
+    }, []);
+
+    const formatPhoneNumber = (value) => {
+      // Удаляем всё кроме цифр
+      let digits = value.replace(/\D/g, '');
+      
+      // Если первая цифра не 7, добавляем её
+      if (digits && !digits.startsWith('7')) {
+        digits = '7' + digits;
+      }
+
+      // Форматируем: +7 (xxx) xxx-xx-xx
+      if (digits.length === 0) return '';
+      if (digits.length <= 1) return '+' + digits;
+      if (digits.length <= 4) return `+${digits.slice(0, 1)} (${digits.slice(1)}`;
+      if (digits.length <= 7) return `+${digits.slice(0, 1)} (${digits.slice(1, 4)}) ${digits.slice(4)}`;
+      
+      return `+${digits.slice(0, 1)} (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9, 11)}`;
+    };
+
     const validateForm = () => {
       const newErrors = {};
       
       if (!form.name.trim()) newErrors.name = 'Введите имя';
-      if (!form.phone.trim()) newErrors.phone = 'Введите телефон';
-      if (!/^\+?[0-9\s\-\(\)]{10,}$/.test(form.phone)) {
-        newErrors.phone = 'Некорректный номер телефона';
+      
+      const phoneDigits = form.phone.replace(/\D/g, '');
+      if (!phoneDigits) {
+        newErrors.phone = 'Введите телефон';
+      } else if (phoneDigits.length < 11) {
+        newErrors.phone = 'Номер должен быть полным';
       }
+      
       if (!form.address.trim()) newErrors.address = 'Введите адрес';
       
       setErrors(newErrors);
@@ -491,8 +536,8 @@ export default function Home() {
               <input
                 type="tel"
                 value={form.phone}
-                onChange={(e) => setForm({...form, phone: e.target.value})}
-                placeholder="+7 (___) ___-__-__"
+                onChange={(e) => setForm({...form, phone: formatPhoneNumber(e.target.value)})}
+                placeholder="+7 (700) 000-00-00"
                 disabled={isLoading}
                 style={{ borderColor: errors.phone ? '#ef4444' : undefined }}
               />
