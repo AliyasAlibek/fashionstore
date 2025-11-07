@@ -1,26 +1,42 @@
 * {
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   overflow-x: hidden;
 }
 
+/* Карточки - современный стиль */
 .ploom-card {
   background: white;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.ploom-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
 }
 
 .ploom-card:active {
-  transform: scale(0.98);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transform: translateY(-4px) scale(0.98);
+}
+
+.category-image, .product-image {
+  transition: transform 0.4s ease;
+}
+
+.ploom-card:hover .category-image,
+.ploom-card:hover .product-image {
+  transform: scale(1.05);
 }
 
 .category-image {
@@ -35,78 +51,93 @@ body {
   object-fit: cover;
 }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border-top: 1px solid #E5E5E5;
-  display: flex;
-  justify-content: space-around;
-  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
-  z-index: 1000;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  color: #999;
-  font-size: 11px;
-  transition: color 0.2s;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.nav-item.active {
-  color: #3B82F6;
-}
-
-.badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #EF4444;
+/* Кнопки - градиенты и стиль */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 10px;
-  min-width: 18px;
-  text-align: center;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.size-button {
-  border: 1.5px solid #E5E5E5;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.2s;
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
   background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Размеры - улучшенный стиль */
+.size-button {
+  background: white;
+  border: 2px solid #e5e7eb;
+  padding: 12px 20px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-weight: 500;
   font-size: 14px;
 }
 
-.size-button.selected {
-  border-color: #3B82F6;
-  background: #EFF6FF;
-  color: #3B82F6;
+.size-button:hover {
+  border-color: #667eea;
+  background: #f5f7ff;
+  transform: translateY(-2px);
 }
 
+.size-button.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Цвета - с тенью */
 .color-button {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid transparent;
-  transition: all 0.2s;
+  border: 3px solid transparent;
+  transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.color-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
 
 .color-button.selected {
-  border-color: #3B82F6;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
 }
 
 .color-button.selected::after {
@@ -116,10 +147,89 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
+/* Навигация - современная */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+  z-index: 1000;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 16px;
+  position: relative;
+}
+
+.nav-item:active {
+  transform: scale(0.95);
+}
+
+.nav-item.active {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 0 0 4px 4px;
+}
+
+/* Badge - улучшенный */
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #f56565 0%, #ed64a6 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 12px;
+  min-width: 18px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(245, 101, 101, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Свайпер */
 .image-swiper {
   display: flex;
   overflow-x: scroll;
@@ -130,4 +240,178 @@ body {
 
 .image-swiper::-webkit-scrollbar {
   display: none;
+}
+
+/* Fixed кнопка "Добавить в корзину" */
+.fixed-bottom-button {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom));
+  left: 16px;
+  right: 16px;
+  z-index: 999;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 18px 32px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.fixed-bottom-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.6);
+}
+
+.fixed-bottom-button:active {
+  transform: translateY(-2px);
+}
+
+/* Индикаторы свайпера - красивые */
+.swiper-indicator {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.swiper-indicator.active {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Input fields - современные */
+input, textarea {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background: #f9fafb;
+}
+
+/* Карточка товара в корзине */
+.cart-item {
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  transform: translateX(4px);
+}
+
+/* Градиентный фон для секций */
+.section-gradient {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 24px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+/* Кнопка удаления - красная и красивая */
+.btn-delete {
+  background: linear-gradient(135deg, #f56565 0%, #ed64a6 100%);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 6px 16px rgba(245, 101, 101, 0.4);
+}
+
+/* Анимация появления */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Тег со скидкой */
+.discount-badge {
+  background: linear-gradient(135deg, #f56565 0%, #ed64a6 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Профиль - карточки */
+.profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-card:hover {
+  transform: translateX(8px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+/* Аватар */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .ploom-card {
+    border-radius: 20px;
+  }
+  
+  .btn-primary {
+    padding: 14px 28px;
+    font-size: 15px;
+  }
 }
